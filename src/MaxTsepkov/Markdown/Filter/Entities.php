@@ -55,7 +55,7 @@ class Entities extends Filter
     {
         foreach($text as $no => $line) {
             // escape & outside of html entity
-            $line->gist = preg_replace('/&(?![A-z]+;)/uS', '&amp;', $line);
+            $line->gist = preg_replace('/&(?!(?:#\d+|#x[a-fA-F0-9]+|\w+);)/uS', '&amp;', $line);
 
             // escape < outside of html tag
             $line->gist = preg_replace('/<(?![A-z\\/])/uS', '&lt;', $line);
