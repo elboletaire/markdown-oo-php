@@ -76,7 +76,7 @@ class Emphasis extends Filter
 
             // emphasis
             $matches = array();
-            $pattern = '/(?<!\\\\)([*_])(?!\s)(.+?)(?<![\\\\\s])\1/u';
+            $pattern = '/(?<!\\\\)\b([*_])(?!\s)(.+?)(?<![\\\\\s])\1\b/u';
             preg_match_all($pattern, $noTags, $matches);
             foreach($matches[0] as $match) {
                 $replace = '<em>' . substr($match, 1);

@@ -52,7 +52,7 @@ class Stack extends \SplStack
                 $text[$no] = $line;
             }
         }
-        $text[$no]->gist = $text[$no] . '</ul>';
+        $text[$no]->gist = $text[$no] . "</$tag>";
 
         $this->reset();
 
