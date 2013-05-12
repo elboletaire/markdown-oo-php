@@ -58,7 +58,7 @@ class Link extends Filter
     {
         $links = array();
         foreach($text as $no => $line) {
-            if (preg_match('/^ {0,3}\[([\w ]+)\]:\s+<?(.+?)>?(\s+[\'"(].*?[\'")])?\s*$/uS', $line, $match)) {
+            if (preg_match('/^ {0,3}[!]?\[([\w ]+)\]:\s+<?(.+?)>?(\s+[\'"(].*?[\'")])?\s*$/uS', $line, $match)) {
                 $link =& $links[ strtolower($match[1]) ];
                 $link['href']  = $match[2];
                 $link['title'] = null;
@@ -66,7 +66,7 @@ class Link extends Filter
                     $link['title'] = trim($match[3], ' \'"()');
                 }
                 else if (isset($text[$no + 1])) {
-                    if (preg_match('/^ {0,3}[\'"(].*?[\'")]\s*$/uS', $text[$no + 1], $match)) {
+                    if (preg_match('/^ {0,3}[!]?[\'"(].*?[\'")]\s*$/uS', $text[$no + 1], $match)) {
                         $link['title'] = trim($match[0], ' \'"()');
                         $text[$no + 1]->gist = '';
                     }
@@ -79,12 +79,17 @@ class Link extends Filter
 
         foreach($text as $no => $line) {
             $line->gist = preg_replace_callback(
-                '/\[(.*?)\]\((.*?)(\s+"[\w ]+")?\)/uS',
+                '/[!]?\[(.*?)\]\((.*?)(\s+"[\w ]+")?\)/uS',
                 function ($match) {
                     if (!isset($match[3])) {
                         $match[3] = null;
                     }
-                    return Link::buildHtml($match[1], $match[2], $match[3]);
+
+                    if (substr($match[0],0,1) == "!") {
+                        return Link::buildImage($match[1], $match[2], $match[3]);
+                    } else {
+                        return Link::buildHtml($match[1], $match[2], $match[3]);
+                    };
                 },
                 $line->gist
             );
@@ -112,6 +117,20 @@ class Link extends Filter
             $link .= ' title="' . trim($title, ' "') . '"';
         }
         $link .= '>' . trim($content) . '</a>';
+
+        return $link;
+    }
+
+    public static function buildImage($alt = null, $src, $title = null)
+    {
+        $link = '<img src="' . trim($src) . '"';
+        if (!empty($alt)) {
+            $link .= ' alt="' . trim($alt, ' "') . '"';
+        }
+        if (!empty($title)) {
+            $link .= ' title="' . trim($title, ' "') . '"';
+        }
+        $link .= '>';
 
         return $link;
     }
