@@ -1,0 +1,15 @@
+{
+  "name": "yogipw/markdown-oo-php",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Max Tsepkov",
+      "email": "max@garygolden.me"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "MaxTsepkov\\Markdown": "src"
+    }
+  }
+}
