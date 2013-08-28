@@ -43,5 +43,5 @@ Requirements
 Contribution
 ==========
 
-  1.  [Fork me](https://github.com/yogipw/markdown-oo-php)
+  1.  [Fork me](https://github.com/maxtsepkov/markdown-oo-php)
   2.  [Mail me](mailto:max@yogi.pw)
