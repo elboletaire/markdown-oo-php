@@ -25,15 +25,17 @@ It's an object-oriented, PSR compatible PHP library capable of converting markdo
 Quick start
 =========
 
-    set_include_path(get_include_path() . PATH_SEPARATOR . realpath('src'));
+```php
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath('src'));
 
-    require_once 'SplClassLoader.php';
-    $l = new SplClassLoader('MaxTsepkov');
-    $l->register();
+require_once 'SplClassLoader.php';
+$l = new SplClassLoader('MaxTsepkov');
+$l->register();
 
-    use MaxTsepkov\Markdown\Text;
+use MaxTsepkov\Markdown\Text;
 
-    echo new Text($markdown);
+echo new Text($markdown);
+```
 
 Requirements
 ===========
