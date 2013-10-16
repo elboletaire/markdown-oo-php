@@ -67,6 +67,9 @@ class Code extends Filter
         foreach($text as $no => $line) {
             if ($line->isIndented() || ($this->commentBegin == true && !$line->beginsWith('```'))) {
                 $line->flags |= Line::NOMARKDOWN + Line::CODEBLOCK;
+                if (isset($text[$no + 1])) {
+                    $line->gist .= "\n";
+                }
             } elseif ($line->isBlank()) {
                 $prev_no = $no;
                 do {
@@ -84,11 +87,7 @@ class Code extends Filter
                     $line->flags |= Line::NOMARKDOWN + Line::CODEBLOCK;
                 }
             } elseif ($line->beginsWith('```')) {
-                if (!$this->commentBegin) {
-                    $this->commentBegin = true;
-                } else {
-                    $this->commentBegin = false;
-                }
+                $this->commentBegin = !$this->commentBegin;
                 $line->flags |= Line::CODEBLOCK;
             }
         }
