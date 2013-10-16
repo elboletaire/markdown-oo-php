@@ -113,6 +113,11 @@ class Line implements \ArrayAccess
         }
     }
 
+    public function beginsWith($text)
+    {
+        return strpos($this->gist, $text) === 0;
+    }
+
     public function offsetExists($offset)
     {
         return isset($this->gist[$offset]);

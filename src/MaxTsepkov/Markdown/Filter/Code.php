@@ -54,6 +54,8 @@ use MaxTsepkov\Markdown\Filter,
  */
 class Code extends Filter
 {
+    private $commentBegin = false;
+
     /**
      * Flags lines containing codeblocks.
      * Other filters must avoid parsing markdown on that lines.
@@ -63,7 +65,7 @@ class Code extends Filter
     public function preFilter(Text $text)
     {
         foreach($text as $no => $line) {
-            if ($line->isIndented()) {
+            if ($line->isIndented() || ($this->commentBegin == true && !$line->beginsWith('```'))) {
                 $line->flags |= Line::NOMARKDOWN + Line::CODEBLOCK;
             } elseif ($line->isBlank()) {
                 $prev_no = $no;
@@ -81,8 +83,14 @@ class Code extends Filter
                 if ($prevline !== null && $prevline->isIndented() && $nextline !== null && $nextline->isIndented()) {
                     $line->flags |= Line::NOMARKDOWN + Line::CODEBLOCK;
                 }
+            } elseif ($line->beginsWith('```')) {
+                if (!$this->commentBegin) {
+                    $this->commentBegin = true;
+                } else {
+                    $this->commentBegin = false;
+                }
+                $line->flags |= Line::CODEBLOCK;
             }
-
         }
     }
 
@@ -106,10 +114,21 @@ class Code extends Filter
                 $line->outdent();
                 $line->gist = htmlspecialchars($line, ENT_NOQUOTES);
                 if (!$insideCodeBlock) {
-                    $line->prepend('<pre><code>');
+                    if ($line->flags == Line::CODEBLOCK) {
+                        if ($line->gist !== '```') {
+                            $line->gist = '<pre' . preg_replace('/```([a-z]+)/i', ' data-type="$1"', $line->gist) . '><code>';
+                        } else {
+                            $line->gist = '<pre><code>';
+                        }
+                    } else {
+                        $line->prepend('<pre><code>');
+                    }
                     $insideCodeBlock = true;
                 }
                 if (!$nextline || !($nextline->flags & Line::CODEBLOCK)) {
+                    if ($line->flags == Line::CODEBLOCK) {
+                        $line->gist = null;
+                    }
                     $line->append('</code></pre>');
                     $insideCodeBlock = false;
                 }

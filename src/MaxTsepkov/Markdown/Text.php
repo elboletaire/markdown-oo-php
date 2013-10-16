@@ -129,7 +129,7 @@ class Text extends \ArrayObject
             $this->_isFiltered = true;
         }
 
-        return implode("\n", (array) $this);
+        return implode("", (array) $this);
     }
 
     public function getFilters()
