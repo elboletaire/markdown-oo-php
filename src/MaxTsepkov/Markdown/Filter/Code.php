@@ -114,8 +114,8 @@ class Code extends Filter
                 $line->gist = htmlspecialchars($line, ENT_NOQUOTES);
                 if (!$insideCodeBlock) {
                     if ($line->flags == Line::CODEBLOCK) {
-                        if ($line->gist !== '```') {
-                            $line->gist = '<pre' . preg_replace('/```([a-z]+)/i', ' data-type="$1"', $line->gist) . '><code>';
+                        if (!preg_match('/^`$/', $line->gist)) {
+                            $line->gist = '<pre' . preg_replace('/````?([a-z]+)/i', ' data-type="$1"', $line->gist) . '><code>';
                         } else {
                             $line->gist = '<pre><code>';
                         }
