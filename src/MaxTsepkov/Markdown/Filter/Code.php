@@ -115,7 +115,7 @@ class Code extends Filter
                 if (!$insideCodeBlock) {
                     if ($line->flags == Line::CODEBLOCK) {
                         if (!preg_match('/^`$/', $line->gist)) {
-                            $line->gist = '<pre' . preg_replace('/````?([a-z]+)/i', ' data-type="$1"', $line->gist) . '><code>';
+                            $line->gist = preg_replace('/````?([a-z]+)/i', '<pre data-type="$1"><code>', $line->gist);
                         } else {
                             $line->gist = '<pre><code>';
                         }
